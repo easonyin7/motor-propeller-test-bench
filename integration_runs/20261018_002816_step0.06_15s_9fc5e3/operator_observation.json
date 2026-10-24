@@ -1,0 +1,10 @@
+{
+  "source": "user_chat_after_expanded_policy_0_060_fifteen_second_measurement",
+  "observation": "已完全停止，夹具牢固，无明显异常",
+  "physical_stop_confirmed": true,
+  "clamps_secure_without_hand_restraint": true,
+  "target_value": 0.06,
+  "target_seconds": 15,
+  "warmup_seconds": 5,
+  "total_profile_seconds": 20
+}

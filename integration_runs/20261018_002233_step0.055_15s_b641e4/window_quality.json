@@ -1,0 +1,232 @@
+{
+  "duration_seconds": 15,
+  "analysis_start_seconds": 5,
+  "policy": {
+    "overall_min_valid_fraction": 0.7,
+    "overall_min_valid_samples": 20,
+    "each_window_min_valid_fraction": 0.5,
+    "each_window_min_valid_samples": 5,
+    "window_seconds": 5
+  },
+  "fields": {
+    "upper": {
+      "unit": "g",
+      "overall": {
+        "samples": 45,
+        "valid_samples": 45,
+        "valid_fraction": 1.0,
+        "mean": 15.511111111111111,
+        "min": 11.0,
+        "max": 18.0,
+        "invalid_reasons": {}
+      },
+      "windows": [
+        {
+          "start": 5,
+          "end": 10,
+          "samples": 23,
+          "valid_samples": 23,
+          "valid_fraction": 1.0,
+          "mean": 14.73913043478261,
+          "min": 11.0,
+          "max": 17.0,
+          "invalid_reasons": {}
+        },
+        {
+          "start": 10,
+          "end": 15,
+          "samples": 22,
+          "valid_samples": 22,
+          "valid_fraction": 1.0,
+          "mean": 16.318181818181817,
+          "min": 15.0,
+          "max": 18.0,
+          "invalid_reasons": {}
+        }
+      ],
+      "window_mean_tolerance": 3.102222222222222,
+      "absolute_tolerance": 2,
+      "relative_tolerance": 0.2,
+      "window_mean_spread": 1.5790513833992073,
+      "coverage_passed": true,
+      "window_consistency_passed": true,
+      "passed": true,
+      "prefix_comparisons": {
+        "10": {
+          "samples": 23,
+          "valid_samples": 23,
+          "valid_fraction": 1.0,
+          "mean": 14.73913043478261,
+          "min": 11.0,
+          "max": 17.0,
+          "invalid_reasons": {}
+        },
+        "15": {
+          "samples": 45,
+          "valid_samples": 45,
+          "valid_fraction": 1.0,
+          "mean": 15.511111111111111,
+          "min": 11.0,
+          "max": 18.0,
+          "invalid_reasons": {}
+        }
+      }
+    },
+    "current": {
+      "unit": "A",
+      "overall": {
+        "samples": 45,
+        "valid_samples": 43,
+        "valid_fraction": 0.9555555555555556,
+        "mean": 0.3469767441860465,
+        "min": 0.34,
+        "max": 0.36,
+        "invalid_reasons": {
+          "段码不确定或数字缺失": 2
+        }
+      },
+      "windows": [
+        {
+          "start": 5,
+          "end": 10,
+          "samples": 23,
+          "valid_samples": 22,
+          "valid_fraction": 0.9565217391304348,
+          "mean": 0.3472727272727273,
+          "min": 0.34,
+          "max": 0.36,
+          "invalid_reasons": {
+            "段码不确定或数字缺失": 1
+          }
+        },
+        {
+          "start": 10,
+          "end": 15,
+          "samples": 22,
+          "valid_samples": 21,
+          "valid_fraction": 0.9545454545454546,
+          "mean": 0.3466666666666667,
+          "min": 0.34,
+          "max": 0.35,
+          "invalid_reasons": {
+            "段码不确定或数字缺失": 1
+          }
+        }
+      ],
+      "window_mean_tolerance": 0.034697674418604656,
+      "absolute_tolerance": 0.02,
+      "relative_tolerance": 0.1,
+      "window_mean_spread": 0.00060606060606061,
+      "coverage_passed": true,
+      "window_consistency_passed": true,
+      "passed": true,
+      "prefix_comparisons": {
+        "10": {
+          "samples": 23,
+          "valid_samples": 22,
+          "valid_fraction": 0.9565217391304348,
+          "mean": 0.3472727272727273,
+          "min": 0.34,
+          "max": 0.36,
+          "invalid_reasons": {
+            "段码不确定或数字缺失": 1
+          }
+        },
+        "15": {
+          "samples": 45,
+          "valid_samples": 43,
+          "valid_fraction": 0.9555555555555556,
+          "mean": 0.3469767441860465,
+          "min": 0.34,
+          "max": 0.36,
+          "invalid_reasons": {
+            "段码不确定或数字缺失": 2
+          }
+        }
+      }
+    },
+    "power": {
+      "unit": "W",
+      "overall": {
+        "samples": 45,
+        "valid_samples": 43,
+        "valid_fraction": 0.9555555555555556,
+        "mean": 8.544418604651161,
+        "min": 8.37,
+        "max": 8.87,
+        "invalid_reasons": {
+          "段码不确定或数字缺失": 2
+        }
+      },
+      "windows": [
+        {
+          "start": 5,
+          "end": 10,
+          "samples": 23,
+          "valid_samples": 22,
+          "valid_fraction": 0.9565217391304348,
+          "mean": 8.55181818181818,
+          "min": 8.37,
+          "max": 8.87,
+          "invalid_reasons": {
+            "段码不确定或数字缺失": 1
+          }
+        },
+        {
+          "start": 10,
+          "end": 15,
+          "samples": 22,
+          "valid_samples": 21,
+          "valid_fraction": 0.9545454545454546,
+          "mean": 8.536666666666665,
+          "min": 8.37,
+          "max": 8.62,
+          "invalid_reasons": {
+            "段码不确定或数字缺失": 1
+          }
+        }
+      ],
+      "window_mean_tolerance": 0.8544418604651162,
+      "absolute_tolerance": 0.5,
+      "relative_tolerance": 0.1,
+      "window_mean_spread": 0.015151515151515582,
+      "coverage_passed": true,
+      "window_consistency_passed": true,
+      "passed": true,
+      "prefix_comparisons": {
+        "10": {
+          "samples": 23,
+          "valid_samples": 22,
+          "valid_fraction": 0.9565217391304348,
+          "mean": 8.55181818181818,
+          "min": 8.37,
+          "max": 8.87,
+          "invalid_reasons": {
+            "段码不确定或数字缺失": 1
+          }
+        },
+        "15": {
+          "samples": 45,
+          "valid_samples": 43,
+          "valid_fraction": 0.9555555555555556,
+          "mean": 8.544418604651161,
+          "min": 8.37,
+          "max": 8.87,
+          "invalid_reasons": {
+            "段码不确定或数字缺失": 2
+          }
+        }
+      }
+    }
+  },
+  "passed": true,
+  "interpretation": "Exploratory display-mean consistency only; missing-data bias, calibration and physical steady-state are not established.",
+  "run_id": "b641e404059b4c1faee2e75613559c36",
+  "normalized_output": 0.055,
+  "source_cv_folder": "C:\\Users\\az\\.codex\\.chatgpt-projects\\g-p-6acc84e447bc8191aef64c5e26624f9e\\cv_mvp\\instrument_logs\\20261018_002238_420496",
+  "total_profile_seconds": 19.999999999992724,
+  "warmup_seconds_excluded": 4.999999999992724,
+  "load_response_observed": true,
+  "window_conditions_passed": true,
+  "physical_confirmation_file_present": true
+}

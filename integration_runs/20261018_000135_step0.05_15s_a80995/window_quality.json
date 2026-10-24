@@ -1,0 +1,212 @@
+{
+  "duration_seconds": 15,
+  "analysis_start_seconds": 5,
+  "policy": {
+    "overall_min_valid_fraction": 0.7,
+    "overall_min_valid_samples": 20,
+    "each_window_min_valid_fraction": 0.5,
+    "each_window_min_valid_samples": 5,
+    "window_seconds": 5
+  },
+  "fields": {
+    "upper": {
+      "unit": "g",
+      "overall": {
+        "samples": 46,
+        "valid_samples": 46,
+        "valid_fraction": 1.0,
+        "mean": 16.108695652173914,
+        "min": 13.0,
+        "max": 18.0,
+        "invalid_reasons": {}
+      },
+      "windows": [
+        {
+          "start": 5,
+          "end": 10,
+          "samples": 23,
+          "valid_samples": 23,
+          "valid_fraction": 1.0,
+          "mean": 16.347826086956523,
+          "min": 13.0,
+          "max": 18.0,
+          "invalid_reasons": {}
+        },
+        {
+          "start": 10,
+          "end": 15,
+          "samples": 23,
+          "valid_samples": 23,
+          "valid_fraction": 1.0,
+          "mean": 15.869565217391305,
+          "min": 13.0,
+          "max": 17.0,
+          "invalid_reasons": {}
+        }
+      ],
+      "window_mean_tolerance": 3.221739130434783,
+      "absolute_tolerance": 2,
+      "relative_tolerance": 0.2,
+      "window_mean_spread": 0.4782608695652186,
+      "coverage_passed": true,
+      "window_consistency_passed": true,
+      "passed": true,
+      "prefix_comparisons": {
+        "10": {
+          "samples": 23,
+          "valid_samples": 23,
+          "valid_fraction": 1.0,
+          "mean": 16.347826086956523,
+          "min": 13.0,
+          "max": 18.0,
+          "invalid_reasons": {}
+        },
+        "15": {
+          "samples": 46,
+          "valid_samples": 46,
+          "valid_fraction": 1.0,
+          "mean": 16.108695652173914,
+          "min": 13.0,
+          "max": 18.0,
+          "invalid_reasons": {}
+        }
+      }
+    },
+    "current": {
+      "unit": "A",
+      "overall": {
+        "samples": 46,
+        "valid_samples": 46,
+        "valid_fraction": 1.0,
+        "mean": 0.33,
+        "min": 0.33,
+        "max": 0.33,
+        "invalid_reasons": {}
+      },
+      "windows": [
+        {
+          "start": 5,
+          "end": 10,
+          "samples": 23,
+          "valid_samples": 23,
+          "valid_fraction": 1.0,
+          "mean": 0.33,
+          "min": 0.33,
+          "max": 0.33,
+          "invalid_reasons": {}
+        },
+        {
+          "start": 10,
+          "end": 15,
+          "samples": 23,
+          "valid_samples": 23,
+          "valid_fraction": 1.0,
+          "mean": 0.33,
+          "min": 0.33,
+          "max": 0.33,
+          "invalid_reasons": {}
+        }
+      ],
+      "window_mean_tolerance": 0.033,
+      "absolute_tolerance": 0.02,
+      "relative_tolerance": 0.1,
+      "window_mean_spread": 0.0,
+      "coverage_passed": true,
+      "window_consistency_passed": true,
+      "passed": true,
+      "prefix_comparisons": {
+        "10": {
+          "samples": 23,
+          "valid_samples": 23,
+          "valid_fraction": 1.0,
+          "mean": 0.33,
+          "min": 0.33,
+          "max": 0.33,
+          "invalid_reasons": {}
+        },
+        "15": {
+          "samples": 46,
+          "valid_samples": 46,
+          "valid_fraction": 1.0,
+          "mean": 0.33,
+          "min": 0.33,
+          "max": 0.33,
+          "invalid_reasons": {}
+        }
+      }
+    },
+    "power": {
+      "unit": "W",
+      "overall": {
+        "samples": 46,
+        "valid_samples": 46,
+        "valid_fraction": 1.0,
+        "mean": 8.13,
+        "min": 8.13,
+        "max": 8.13,
+        "invalid_reasons": {}
+      },
+      "windows": [
+        {
+          "start": 5,
+          "end": 10,
+          "samples": 23,
+          "valid_samples": 23,
+          "valid_fraction": 1.0,
+          "mean": 8.13,
+          "min": 8.13,
+          "max": 8.13,
+          "invalid_reasons": {}
+        },
+        {
+          "start": 10,
+          "end": 15,
+          "samples": 23,
+          "valid_samples": 23,
+          "valid_fraction": 1.0,
+          "mean": 8.13,
+          "min": 8.13,
+          "max": 8.13,
+          "invalid_reasons": {}
+        }
+      ],
+      "window_mean_tolerance": 0.8130000000000002,
+      "absolute_tolerance": 0.5,
+      "relative_tolerance": 0.1,
+      "window_mean_spread": 0.0,
+      "coverage_passed": true,
+      "window_consistency_passed": true,
+      "passed": true,
+      "prefix_comparisons": {
+        "10": {
+          "samples": 23,
+          "valid_samples": 23,
+          "valid_fraction": 1.0,
+          "mean": 8.13,
+          "min": 8.13,
+          "max": 8.13,
+          "invalid_reasons": {}
+        },
+        "15": {
+          "samples": 46,
+          "valid_samples": 46,
+          "valid_fraction": 1.0,
+          "mean": 8.13,
+          "min": 8.13,
+          "max": 8.13,
+          "invalid_reasons": {}
+        }
+      }
+    }
+  },
+  "passed": true,
+  "interpretation": "Exploratory display-mean consistency only; missing-data bias, calibration and physical steady-state are not established.",
+  "run_id": "a80995b146864c998e8271ca0bd40142",
+  "normalized_output": 0.05,
+  "source_cv_folder": "C:\\Users\\az\\.codex\\.chatgpt-projects\\g-p-6acc84e447bc8191aef64c5e26624f9e\\cv_mvp\\instrument_logs\\20261018_000140_978845",
+  "total_profile_seconds": 20.0,
+  "warmup_seconds_excluded": 5.0,
+  "load_response_observed": true,
+  "window_conditions_passed": true,
+  "physical_confirmation_file_present": true
+}

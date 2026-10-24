@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+logs/
+digit_logs/
+calibration/*
+!calibration/release_reference.png
+instrument_logs/

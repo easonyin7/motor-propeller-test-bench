@@ -1,0 +1,7 @@
+{
+  "physical_stop_confirmed": true,
+  "clamps_secure_without_hand_restraint": true,
+  "no_obvious_vibration_noise_or_abnormal_heat": true,
+  "source": "operator_reply_after_completed_0.060_15s_run",
+  "note": "Command log shows 0.060 held through +15.000 s and output returned to zero at +15.109 s; the last target-window CV sample was at +14.893 s."
+}

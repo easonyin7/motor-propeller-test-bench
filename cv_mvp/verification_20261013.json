@@ -1,0 +1,123 @@
+{
+  "user_feedback": "都能对应，识别很快。但是，窗口的移动有些卡",
+  "change": "后台推理与图像缩放，界面仅接收最新结果",
+  "before": {
+    "camera": "2MP USB Camera",
+    "camera_index": 1,
+    "backend": "DirectShow",
+    "requested_resolution": [
+      1280,
+      720
+    ],
+    "gesture_threshold": 0.65,
+    "stores_images": false,
+    "actual_resolution": [
+      1280,
+      720
+    ],
+    "state": "stopped",
+    "updated_at": "2026-10-13T15:27:31.04167+08:00",
+    "elapsed_seconds": 70.75,
+    "processed_frames": 1028,
+    "captured_frames": 2113,
+    "face_count": 1,
+    "face_confidence": 0.796,
+    "hands": [],
+    "face_detected_frames": 971,
+    "hand_detected_frames": 553,
+    "gesture_detected_frames": {
+      "Pointing_Up": 53,
+      "Victory": 70,
+      "Open_Palm": 77,
+      "Closed_Fist": 57,
+      "Thumb_Up": 78,
+      "Thumb_Down": 33
+    },
+    "processing_fps": 17.9,
+    "capture_fps": 29.9,
+    "inference_ms": 19.8,
+    "mean_inference_ms": 19.5,
+    "frame_age_ms": 48.4,
+    "log_folder": "C:\\Users\\az\\.codex\\.chatgpt-projects\\g-p-6acc84e447bc8191aef64c5e26624f9e\\cv_mvp\\logs\\20261013_152620_292071",
+    "error": null,
+    "closed_at": "2026-10-13T15:27:31.434921+08:00"
+  },
+  "optimized": {
+    "camera": "2MP USB Camera",
+    "camera_index": 1,
+    "backend": "DirectShow",
+    "requested_resolution": [
+      1280,
+      720
+    ],
+    "gesture_threshold": 0.65,
+    "stores_images": false,
+    "actual_resolution": [
+      1280,
+      720
+    ],
+    "state": "stopped",
+    "updated_at": "2026-10-13T15:30:00.723168+08:00",
+    "elapsed_seconds": 8.02,
+    "processed_frames": 213,
+    "captured_frames": 233,
+    "face_count": 1,
+    "face_confidence": 0.7897,
+    "hands": [
+      {
+        "gesture": "Thumb_Up",
+        "raw_gesture": "Thumb_Up",
+        "confidence": 0.6663
+      }
+    ],
+    "face_detected_frames": 213,
+    "hand_detected_frames": 32,
+    "gesture_detected_frames": {
+      "Thumb_Up": 27
+    },
+    "processing_fps": 23.9,
+    "capture_fps": 29.0,
+    "inference_ms": 33.1,
+    "mean_inference_ms": 23.0,
+    "frame_age_ms": 60.7,
+    "log_folder": "C:\\Users\\az\\.codex\\.chatgpt-projects\\g-p-6acc84e447bc8191aef64c5e26624f9e\\cv_mvp\\logs\\20261013_152952_699618",
+    "error": null,
+    "closed_at": "2026-10-13T15:30:02.777461+08:00"
+  },
+  "drag_improvement_user_confirmed": false,
+  "recovery_after_usb_reconnect": {
+    "camera": "2MP USB Camera",
+    "camera_index": 1,
+    "backend": "DirectShow",
+    "requested_resolution": [
+      1280,
+      720
+    ],
+    "gesture_threshold": 0.65,
+    "stores_images": false,
+    "actual_resolution": [
+      1280,
+      720
+    ],
+    "state": "stopped",
+    "updated_at": "2026-10-13T15:37:47.481559+08:00",
+    "elapsed_seconds": 8.02,
+    "processed_frames": 237,
+    "captured_frames": 238,
+    "face_count": 1,
+    "face_confidence": 0.7371,
+    "hands": [],
+    "face_detected_frames": 211,
+    "hand_detected_frames": 0,
+    "gesture_detected_frames": {},
+    "processing_fps": 30.0,
+    "capture_fps": 29.7,
+    "inference_ms": 18.1,
+    "mean_inference_ms": 18.8,
+    "mean_pixel_brightness": 135.27,
+    "frame_age_ms": 23.7,
+    "log_folder": "C:\\Users\\az\\.codex\\.chatgpt-projects\\g-p-6acc84e447bc8191aef64c5e26624f9e\\cv_mvp\\logs\\20261013_153739_462549",
+    "error": null,
+    "closed_at": "2026-10-13T15:37:49.677505+08:00"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "stopped_gap_seconds_within_profile": 0,
+  "continuous_profile": true,
+  "clarification": "The inherited stopped_gap_seconds=5 field in result.json is inapplicable to this continuous gentle-rise profile. No stopped gap occurred between its sub-stages. All motor control events are preserved unchanged."
+}

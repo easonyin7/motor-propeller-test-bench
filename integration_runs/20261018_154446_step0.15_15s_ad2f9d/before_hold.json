@@ -1,0 +1,562 @@
+{
+  "alignment": {
+    "valid": true,
+    "panels": {
+      "led": {
+        "valid": true,
+        "method": "display_boundary"
+      },
+      "lcd": {
+        "valid": true,
+        "method": "display_boundary",
+        "refinement_correlation": 0.983,
+        "refinement_shift_pixels": 3.3
+      }
+    }
+  },
+  "fields": [
+    {
+      "value": "0000",
+      "valid": true,
+      "reason": null,
+      "digits": [
+        {
+          "digit": "0",
+          "pattern": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          "scores": [
+            140.0,
+            160.0,
+            162.0,
+            168.0,
+            162.0,
+            157.0,
+            9.0
+          ],
+          "uncertain": false
+        },
+        {
+          "digit": "0",
+          "pattern": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          "scores": [
+            142.9,
+            163.8,
+            168.0,
+            147.0,
+            167.0,
+            155.0,
+            8.0
+          ],
+          "uncertain": false
+        },
+        {
+          "digit": "0",
+          "pattern": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          "scores": [
+            161.0,
+            163.0,
+            166.0,
+            152.0,
+            167.0,
+            168.0,
+            11.9
+          ],
+          "uncertain": false
+        },
+        {
+          "digit": "0",
+          "pattern": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          "scores": [
+            161.0,
+            151.0,
+            157.3,
+            155.0,
+            159.3,
+            148.0,
+            0.0
+          ],
+          "uncertain": false
+        }
+      ],
+      "dot_scores": [
+        0.0,
+        0.0,
+        0.0,
+        19.0
+      ],
+      "contrast": 166.9,
+      "thresholds": [
+        80.1,
+        113.5
+      ],
+      "id": "upper",
+      "name": "拉力",
+      "unit": "g",
+      "stable_value": "0000"
+    },
+    {
+      "value": "24.5",
+      "valid": true,
+      "reason": null,
+      "digits": [
+        {
+          "digit": "2",
+          "pattern": [
+            1,
+            1,
+            0,
+            1,
+            1,
+            0,
+            1
+          ],
+          "scores": [
+            121.0,
+            131.0,
+            2.0,
+            120.5,
+            120.0,
+            2.0,
+            130.0
+          ],
+          "uncertain": false
+        },
+        {
+          "digit": "4",
+          "pattern": [
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1
+          ],
+          "scores": [
+            4.0,
+            130.3,
+            133.8,
+            1.0,
+            1.0,
+            116.0,
+            125.0
+          ],
+          "uncertain": false
+        },
+        {
+          "digit": "5",
+          "pattern": [
+            1,
+            0,
+            1,
+            1,
+            0,
+            1,
+            1
+          ],
+          "scores": [
+            122.0,
+            2.0,
+            129.0,
+            118.0,
+            3.0,
+            111.0,
+            130.7
+          ],
+          "uncertain": false
+        }
+      ],
+      "dot_scores": [
+        3.0,
+        88.2,
+        6.0
+      ],
+      "contrast": 130.3,
+      "thresholds": [
+        28.7,
+        56.0
+      ],
+      "unit_match": 0.991,
+      "id": "voltage",
+      "name": "电压",
+      "unit": "V",
+      "stable_value": "24.5"
+    },
+    {
+      "value": "0.00",
+      "valid": true,
+      "reason": null,
+      "digits": [
+        {
+          "digit": "0",
+          "pattern": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          "scores": [
+            105.0,
+            120.0,
+            119.3,
+            117.0,
+            118.3,
+            108.0,
+            5.0
+          ],
+          "uncertain": false
+        },
+        {
+          "digit": "0",
+          "pattern": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          "scores": [
+            103.0,
+            122.8,
+            131.3,
+            116.0,
+            119.0,
+            106.0,
+            4.0
+          ],
+          "uncertain": false
+        },
+        {
+          "digit": "0",
+          "pattern": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          "scores": [
+            118.0,
+            138.0,
+            139.0,
+            125.0,
+            131.3,
+            114.0,
+            6.0
+          ],
+          "uncertain": false
+        }
+      ],
+      "dot_scores": [
+        89.0,
+        4.0,
+        7.0
+      ],
+      "contrast": 131.3,
+      "thresholds": [
+        28.9,
+        56.5
+      ],
+      "unit_match": 0.989,
+      "id": "current",
+      "name": "电流",
+      "unit": "A",
+      "stable_value": "0.00"
+    },
+    {
+      "value": "0.00",
+      "valid": true,
+      "reason": null,
+      "digits": [
+        {
+          "digit": "0",
+          "pattern": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          "scores": [
+            97.1,
+            125.8,
+            114.0,
+            99.0,
+            117.3,
+            113.0,
+            4.0
+          ],
+          "uncertain": false
+        },
+        {
+          "digit": "0",
+          "pattern": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          "scores": [
+            98.0,
+            124.0,
+            118.0,
+            100.0,
+            116.0,
+            114.0,
+            2.0
+          ],
+          "uncertain": false
+        },
+        {
+          "digit": "0",
+          "pattern": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          "scores": [
+            105.0,
+            123.0,
+            122.0,
+            99.0,
+            118.0,
+            108.3,
+            4.0
+          ],
+          "uncertain": false
+        }
+      ],
+      "dot_scores": [
+        78.0,
+        4.0,
+        4.0
+      ],
+      "contrast": 122.0,
+      "thresholds": [
+        26.8,
+        52.5
+      ],
+      "unit_match": 0.948,
+      "id": "power",
+      "name": "功率",
+      "unit": "W",
+      "stable_value": "0.00"
+    },
+    {
+      "value": "35",
+      "valid": true,
+      "reason": null,
+      "digits": [
+        {
+          "digit": " ",
+          "pattern": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "scores": [
+            1.0,
+            2.0,
+            0.0,
+            1.0,
+            2.0,
+            1.0,
+            1.0
+          ],
+          "uncertain": false
+        },
+        {
+          "digit": "3",
+          "pattern": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1
+          ],
+          "scores": [
+            120.5,
+            132.0,
+            127.0,
+            104.0,
+            4.0,
+            2.0,
+            132.0
+          ],
+          "uncertain": false
+        },
+        {
+          "digit": "5",
+          "pattern": [
+            1,
+            0,
+            1,
+            1,
+            0,
+            1,
+            1
+          ],
+          "scores": [
+            116.0,
+            1.0,
+            127.0,
+            114.0,
+            2.0,
+            119.0,
+            136.0
+          ],
+          "uncertain": false
+        }
+      ],
+      "dot_scores": [
+        2.0,
+        3.0,
+        5.0
+      ],
+      "contrast": 127.0,
+      "thresholds": [
+        27.9,
+        54.6
+      ],
+      "unit_match": 0.922,
+      "id": "energy",
+      "name": "电能",
+      "unit": "Wh",
+      "stable_value": "35"
+    }
+  ],
+  "panel_quads": {
+    "led": [
+      [
+        940.103759765625,
+        226.91038513183594
+      ],
+      [
+        1075.23291015625,
+        224.69223022460938
+      ],
+      [
+        1074.0738525390625,
+        280.7871398925781
+      ],
+      [
+        941.0619506835938,
+        281.05438232421875
+      ]
+    ],
+    "lcd": [
+      [
+        871.0162353515625,
+        428.9696044921875
+      ],
+      [
+        1103.07421875,
+        432.5439758300781
+      ],
+      [
+        1101.35205078125,
+        574.503173828125
+      ],
+      [
+        871.5628051757812,
+        574.1329956054688
+      ]
+    ]
+  },
+  "state": "running",
+  "pid": 27728,
+  "camera": "1080P USB Camera",
+  "run_id": "ad2f9de4cc104ee98e73fd71d9c23739",
+  "frame_seq": 117,
+  "captured_monotonic_ns": 86521252644001,
+  "published_monotonic_ns": 86521484000000,
+  "captured_at": "2026-10-18T15:44:58.991492+08:00",
+  "elapsed_seconds": 3.91,
+  "actual_resolution": [
+    1920,
+    1080
+  ],
+  "camera_format": {
+    "fourcc": "MJPG",
+    "width": 1920.0,
+    "height": 1080.0,
+    "fps_reported": 30.00003000003
+  },
+  "capture_fps": 31.7,
+  "recognition_ms": 230.34,
+  "samples": 19,
+  "all_valid_samples": 17,
+  "all_valid_fraction": 0.8947,
+  "readable_fraction": {
+    "upper": 1.0,
+    "voltage": 1.0,
+    "current": 1.0,
+    "power": 0.8947,
+    "energy": 0.8947
+  },
+  "stable_sample_counts": {
+    "upper": 16,
+    "voltage": 16,
+    "current": 16,
+    "power": 8,
+    "energy": 8
+  },
+  "accepted_changes": 5,
+  "manual_correct": 0,
+  "manual_wrong": 0,
+  "log_folder": "C:\\Users\\az\\.codex\\.chatgpt-projects\\g-p-6acc84e447bc8191aef64c5e26624f9e\\cv_mvp\\instrument_logs\\20261018_154455_084671",
+  "stores_video": false
+}

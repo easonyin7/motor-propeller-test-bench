@@ -1,0 +1,336 @@
+{
+  "profile_version": "hik-auto-p-white-core-20261018-v1",
+  "camera": "1080P USB Camera",
+  "width": 1920,
+  "height": 1080,
+  "sample_interval": 0.2,
+  "stable_seconds": 0.6,
+  "reference_image": "calibration/release_reference.png",
+  "panels": {
+    "led": {
+      "quad": [
+        [
+          940.1041870117188,
+          229.963623046875
+        ],
+        [
+          1074.1851806640625,
+          227.76242065429688
+        ],
+        [
+          1073.04248046875,
+          284.8752136230469
+        ],
+        [
+          941.0780639648438,
+          285.0906066894531
+        ]
+      ],
+      "size": [
+        280,
+        120
+      ],
+      "mode": "white_led_core",
+      "search_margin": 180
+    },
+    "lcd": {
+      "quad": [
+        [
+          872.9877319335938,
+          432.9443664550781
+        ],
+        [
+          1103.0533447265625,
+          434.5579528808594
+        ],
+        [
+          1103.36474609375,
+          577.513916015625
+        ],
+        [
+          871.5779418945312,
+          578.1110229492188
+        ]
+      ],
+      "size": [
+        460,
+        300
+      ],
+      "mode": "dark_lcd",
+      "search_margin": 180
+    }
+  },
+  "fields": [
+    {
+      "id": "upper",
+      "name": "拉力",
+      "unit": "g",
+      "panel": "led",
+      "cells": [
+        [
+          2,
+          3,
+          58,
+          93
+        ],
+        [
+          75,
+          6,
+          54,
+          91
+        ],
+        [
+          144,
+          7,
+          55,
+          91
+        ],
+        [
+          214,
+          8,
+          52,
+          92
+        ]
+      ],
+      "allow_leading_blank": false,
+      "allow_negative": true,
+      "decimals": "detect",
+      "dot_boxes": [],
+      "keep_leading_zeros": true
+    },
+    {
+      "id": "voltage",
+      "name": "电压",
+      "unit": "V",
+      "panel": "lcd",
+      "cells": [
+        [
+          13,
+          30,
+          42,
+          89
+        ],
+        [
+          70,
+          30,
+          43,
+          89
+        ],
+        [
+          127,
+          30,
+          43,
+          89
+        ]
+      ],
+      "allow_leading_blank": true,
+      "decimals": "detect",
+      "dot_boxes": [
+        [
+          55,
+          104,
+          12,
+          16
+        ],
+        [
+          112,
+          104,
+          12,
+          16
+        ],
+        [
+          169,
+          104,
+          10,
+          16
+        ]
+      ],
+      "require_decimal": true,
+      "unit_box": [
+        [
+          177,
+          80,
+          39,
+          44
+        ]
+      ]
+    },
+    {
+      "id": "current",
+      "name": "电流",
+      "unit": "A",
+      "panel": "lcd",
+      "cells": [
+        [
+          231,
+          32,
+          44,
+          89
+        ],
+        [
+          286,
+          32,
+          44,
+          89
+        ],
+        [
+          342,
+          32,
+          44,
+          89
+        ]
+      ],
+      "allow_leading_blank": true,
+      "decimals": "detect",
+      "dot_boxes": [
+        [
+          275,
+          105,
+          11,
+          16
+        ],
+        [
+          330,
+          105,
+          11,
+          16
+        ],
+        [
+          386,
+          105,
+          9,
+          16
+        ]
+      ],
+      "require_decimal": true,
+      "unit_box": [
+        [
+          394,
+          86,
+          34,
+          37
+        ]
+      ]
+    },
+    {
+      "id": "power",
+      "name": "功率",
+      "unit": "W",
+      "panel": "lcd",
+      "cells": [
+        [
+          12,
+          183,
+          44,
+          88
+        ],
+        [
+          70,
+          183,
+          44,
+          88
+        ],
+        [
+          127,
+          183,
+          44,
+          88
+        ]
+      ],
+      "allow_leading_blank": true,
+      "decimals": "detect",
+      "dot_boxes": [
+        [
+          56,
+          256,
+          12,
+          16
+        ],
+        [
+          113,
+          256,
+          12,
+          16
+        ],
+        [
+          170,
+          256,
+          10,
+          16
+        ]
+      ],
+      "require_decimal": true,
+      "dot_percentile": 85,
+      "unit_box": [
+        [
+          180,
+          224,
+          39,
+          49
+        ]
+      ]
+    },
+    {
+      "id": "energy",
+      "name": "电能",
+      "unit": "Wh",
+      "panel": "lcd",
+      "cells": [
+        [
+          230,
+          183,
+          45,
+          89
+        ],
+        [
+          286,
+          183,
+          45,
+          89
+        ],
+        [
+          342,
+          183,
+          45,
+          89
+        ]
+      ],
+      "allow_leading_blank": true,
+      "decimals": "detect",
+      "dot_boxes": [
+        [
+          275,
+          256,
+          11,
+          16
+        ],
+        [
+          331,
+          256,
+          10,
+          16
+        ],
+        [
+          387,
+          256,
+          8,
+          16
+        ]
+      ],
+      "unit_box": [
+        [
+          398,
+          235,
+          53,
+          44
+        ]
+      ]
+    }
+  ],
+  "camera_controls": {
+    "policy": "preserve_user_controls",
+    "focus_observed": 125,
+    "auto_exposure_user_reported": true,
+    "anti_flicker_user_reported": "P"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "source": "user_chat_after_second_twenty_second_measurement",
+  "observation": "已完全停止，夹具牢固，无明显异常",
+  "physical_stop_confirmed": true,
+  "clamps_secure_without_hand_restraint": true,
+  "completed_levels": [0.025],
+  "duration_seconds": 20
+}
