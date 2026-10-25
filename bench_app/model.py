@@ -15,8 +15,10 @@ LEVELS = (.025,.03,.035,.04,.045,.05,.055,.06,.065,.07,.08,.09,.10,.12,.15,.18,.
 MIN_LEVEL=.010
 MAX_LEVEL=1.000
 MAX_PLAN_STEPS=64
+MAIN_LEVELS=tuple(i/10 for i in range(1,11))
+MAIN_TEMPLATE='主测 10–100% + 自动补8点'
 TEMPLATES = {
-    '主测 10–90%': (.10,.20,.30,.40,.50,.60,.70,.80,.90),
+    MAIN_TEMPLATE: MAIN_LEVELS,
     '低输出验证': (.025,.03,.04,.05,.06),
     '中段曲线': (.065,.10,.15,.22,.33,.40,.50,.60),
     '高段曲线': (.70,.75,.80,.85,.90),
@@ -59,6 +61,7 @@ class Plan:
     cooldown_seconds: float = 5
     settle_seconds: float = 2
     followup_first: bool = False
+    auto_supplement: bool = False
 
     def __post_init__(self):
         if not self.levels or len(self.levels)>MAX_PLAN_STEPS:
@@ -73,11 +76,13 @@ class Plan:
             raise ValueError('忽略目标档开始的时间应为0～5秒。')
         if not isinstance(self.followup_first,bool):
             raise ValueError('首档接续标记必须是布尔值。')
+        if not isinstance(self.auto_supplement,bool):
+            raise ValueError('自动补点标记必须是布尔值。')
 
     def as_dict(self):
         return dict(steps=[Step(v).as_dict() for v in self.levels],
                     cooldown_seconds=self.cooldown_seconds,settle_seconds=self.settle_seconds,
-                    followup_first=self.followup_first)
+                    followup_first=self.followup_first,auto_supplement=self.auto_supplement)
 
     @property
     def signature(self):

@@ -11,7 +11,7 @@ import time
 import tkinter as tk
 from tkinter import filedialog,messagebox,ttk
 
-from .model import CAMERA_CONFIG,CAMPAIGN,DATA,LEVELS,MAX_LEVEL,MIN_LEVEL,ROOT,TEMPLATES,Plan,Step
+from .model import CAMERA_CONFIG,CAMPAIGN,DATA,LEVELS,MAIN_TEMPLATE,MAX_LEVEL,MIN_LEVEL,ROOT,TEMPLATES,Plan,Step
 from .data import export_session,load_campaign,number,read_json,supplement_levels,write_json
 from .controller import Controller,scan_ports
 
@@ -107,6 +107,7 @@ class Application:
         self.template=tk.StringVar(value='低输出验证');self.add_level=tk.StringVar(value='0.060')
         self.cooldown=tk.StringVar(value='5');self.settle=tk.StringVar(value='2')
         self.followup_first=tk.BooleanVar(value=False)
+        self.auto_supplement=tk.BooleanVar(value=False)
         self.status=tk.StringVar(value='待机 · 选择方案后开始历史回放')
         self.phase=tk.StringVar(value='当前没有运行中的测试')
         self.data_info=tk.StringVar(value='尚未采集 · 缺测显示为 —')
@@ -189,6 +190,10 @@ class Application:
                  anchor='w',font=('Microsoft YaHei UI',8)).pack(fill='x',padx=17,pady=(0,2))
         self.supplement_button=ttk.Button(side,text='按300–500g补8点',command=self.supplement)
         self.supplement_button.pack(fill='x',padx=17,pady=(6,0))
+        self.auto_supplement_check=tk.Checkbutton(side,text='主测后自动补测300–500g（8点）',
+            variable=self.auto_supplement,command=self.update_plan_note,bg=NAV,fg='#CBD5E1',selectcolor=NAV,
+            activebackground=NAV,activeforeground='white',anchor='w',font=('Microsoft YaHei UI',9))
+        self.auto_supplement_check.pack(fill='x',padx=13)
         self.followup_check=tk.Checkbutton(side,text='首档接续前一轮（忽略残余拉力）',
             variable=self.followup_first,bg=NAV,fg='#CBD5E1',selectcolor=NAV,
             activebackground=NAV,activeforeground='white',anchor='w',
@@ -267,11 +272,12 @@ class Application:
     def plan(self):
         levels=tuple(sorted(float(self.plan_tree.set(i,'level').split()[0]) for i in self.plan_tree.get_children()))
         return Plan(levels,float(self.cooldown.get()),float(self.settle.get()),
-                    self.followup_first.get())
+                    self.followup_first.get(),self.auto_supplement.get())
 
     def apply_template(self):
         if self.controller.active:return
         self.followup_first.set(False)
+        self.auto_supplement.set(self.template.get()==MAIN_TEMPLATE)
         for item in self.plan_tree.get_children():self.plan_tree.delete(item)
         for level in TEMPLATES[self.template.get()]:self._insert_step(level)
         self.update_plan_note()
@@ -290,12 +296,14 @@ class Application:
         except ValueError as exc:
             messagebox.showwarning('无法加入档位',str(exc),parent=self.root);return
         self.add_level.set(f'{level:.3f}')
-        if not self.plan_tree.exists(f'{level:g}'):self._insert_step(level)
+        if not self.plan_tree.exists(f'{level:g}'):
+            self._insert_step(level);self.auto_supplement.set(False)
         for index,item in enumerate(sorted(self.plan_tree.get_children(),key=float)):self.plan_tree.move(item,'',index)
         self.update_plan_note()
 
     def remove_step(self):
         if self.controller.active:return
+        if self.plan_tree.selection():self.auto_supplement.set(False)
         for item in self.plan_tree.selection():self.plan_tree.delete(item)
         self.update_plan_note()
 
@@ -325,7 +333,7 @@ class Application:
                 points=stored.get('points') or []
                 source=f'最近实机会话 {folder.name}'
         if not points:
-            messagebox.showwarning('没有已测数据','请先完成主测 10–90% 实机运行，再生成300–500g补点方案。',parent=self.root)
+            messagebox.showwarning('没有已测数据','请先完成覆盖300–500g的实机测量，再生成独立补点方案。',parent=self.root)
             return
         try:levels=supplement_levels(points)
         except ValueError as exc:
@@ -339,6 +347,7 @@ class Application:
             return
         for item in self.plan_tree.get_children():self.plan_tree.delete(item)
         for level in levels:self._insert_step(level)
+        self.auto_supplement.set(False)
         self.followup_first.set(True)
         self.update_plan_note()
         self.plan_note.configure(text=f"300–500g 补点方案 · {len(levels)}档\n来源：{source}\n"
@@ -348,7 +357,8 @@ class Application:
     def update_plan_note(self):
         try:
             p=self.plan();max_level=max(p.levels)
-            self.plan_note.configure(text=f"{len(p.levels)}个档位 · 最高{max_level*100:g}%\n不设固定电流/功率/拉力中止门槛\n过载保护由电调、电源和现场独立断电负责。")
+            auto='\n随后自动补测300–500g共8点，整轮18点。' if p.auto_supplement else ''
+            self.plan_note.configure(text=f"{len(p.levels)}个主档位 · 最高{max_level*100:g}%{auto}\n不设固定电流/功率/拉力中止门槛\n过载保护由电调、电源和现场独立断电负责。")
         except ValueError:self.plan_note.configure(text='请至少加入一个档位。')
 
     def _mode_changed(self):
@@ -377,9 +387,19 @@ class Application:
 
     def _operator_dialog(self,plan,resume=False):
         dialog=tk.Toplevel(self.root);dialog.title('确认续测方案' if resume else '确认本轮实机方案')
-        dialog.transient(self.root);dialog.grab_set();dialog.geometry('680x480')
+        dialog.transient(self.root);dialog.grab_set()
+        dialog.geometry(f'{min(760,self.root.winfo_screenwidth()-60)}x{min(740,self.root.winfo_screenheight()-90)}')
         dialog.bind('<Escape>',lambda _:dialog.destroy())
-        frame=ttk.Frame(dialog,padding=20);frame.pack(fill='both',expand=True)
+        outer=ttk.Frame(dialog,padding=10);outer.pack(fill='both',expand=True)
+        buttons=ttk.Frame(outer);buttons.pack(side='bottom',fill='x',pady=(10,0))
+        canvas=tk.Canvas(outer,highlightthickness=0)
+        scroll=ttk.Scrollbar(outer,orient='vertical',command=canvas.yview)
+        scroll.pack(side='right',fill='y');canvas.pack(side='left',fill='both',expand=True)
+        canvas.configure(yscrollcommand=scroll.set)
+        frame=ttk.Frame(canvas,padding=10)
+        item=canvas.create_window((0,0),window=frame,anchor='nw')
+        frame.bind('<Configure>',lambda _:canvas.configure(scrollregion=canvas.bbox('all')))
+        canvas.bind('<Configure>',lambda event:canvas.itemconfigure(item,width=event.width))
         ttk.Label(frame,text=('续测从失败档开始；已完成档位保留，不会重跑。' if resume
                              else '确认后将按下表自动执行，异常时停止整个方案。'),
                   font=('Microsoft YaHei UI',12,'bold')).pack(anchor='w')
@@ -390,6 +410,15 @@ class Application:
         if resume:
             ttk.Label(frame,text='相机标定沿用原会话快照。若相机位置、镜头、仪表或曝光已改变，请取消并重新标定后开始新会话。',
                       foreground=RED,wraplength=620,justify='left').pack(anchor='w')
+        if plan.auto_supplement:
+            policy=(self.controller.session or {}).get('supplement',{}) if resume else {}
+            text=('将执行已保存的剩余补点，完成后结束本轮。' if policy.get('levels') else
+                  '主测全部成功后自动生成并执行300–500g内8个补点（不含两端），无需再次点击开始。'
+                  '补点仅用本轮主测插值，输出不超出已测范围；覆盖不足、非单调或异常时停止。')
+            ttk.Label(frame,text=text,foreground=TEAL,wraplength=675,justify='left').pack(anchor='w',pady=5)
+        if 1.0 in plan.levels:
+            ttk.Label(frame,text='本方案包含100%输出（1.000），此前尚未完成该档实机验收；请核对当前设备允许范围。',
+                      foreground=RED,wraplength=675,justify='left').pack(anchor='w',pady=3)
         tree=ttk.Treeview(frame,columns=('level','time','stage'),show='headings',height=8)
         for key,title,width in [('level','输出指令',120),('time','缓升+保持',150),('stage','档段',100)]:
             tree.heading(key,text=title);tree.column(key,width=width,anchor='center')
@@ -410,7 +439,6 @@ class Application:
             outcome.update(confirmed=True,plan_signature=plan.signature,
                 confirmed_at=datetime.now().astimezone().isoformat(),checks=dict(zip(labels,[True]*3)))
             dialog.destroy()
-        buttons=ttk.Frame(frame);buttons.pack(fill='x',pady=(13,0))
         ttk.Button(buttons,text='取消',command=dialog.destroy).pack(side='right')
         ttk.Button(buttons,text=('确认并继续续测' if resume else '确认并开始本轮实机测试'),
                    style='Primary.TButton',command=accept).pack(side='right',padx=10)
@@ -443,7 +471,7 @@ class Application:
         self.draw_curves();self.draw_live()
 
     def _set_busy(self,busy):
-        for widget in (self.mode_box,self.port_box,self.profile_button,self.template_box,self.level_box,self.add_button,self.remove_button,self.supplement_button,self.followup_check,self.cooldown_box,self.settle_box,self.specimen_entry,self.start_button,self.scan_button):
+        for widget in (self.mode_box,self.port_box,self.profile_button,self.template_box,self.level_box,self.add_button,self.remove_button,self.supplement_button,self.auto_supplement_check,self.followup_check,self.cooldown_box,self.settle_box,self.specimen_entry,self.start_button,self.scan_button):
             widget.configure(state='disabled' if busy else 'normal')
         if not busy:
             for widget in (self.mode_box,self.template_box):widget.configure(state='readonly')
@@ -497,7 +525,8 @@ class Application:
             if not info:raise ValueError('原方案没有未完成的档位。')
             _,levels=info
             original=session['plan']
-            plan=Plan(levels,original['cooldown_seconds'],original['settle_seconds'])
+            plan=Plan(levels,original['cooldown_seconds'],original['settle_seconds'],
+                      auto_supplement=original.get('auto_supplement',False))
             if session.get('port'):self.port.set(session['port'])
             if session.get('specimen') is not None:self.specimen.set(session['specimen'])
             self.export_folder=self.controller.folder
@@ -548,9 +577,13 @@ class Application:
         elif kind=='step':
             self.current_level=event['level'];self.current_index=event['index'];self.total_steps=event['total']
             self.live=[];self.motion_started=None;self.last_capture=None;self.stage_started=None
-            prefix=f"续测 · 原方案第{event.get('stage_number',event['index']+1)}档 · " if event.get('resume_number') else ''
+            prefix=('自动补点 · ' if event.get('phase')=='supplement' else '主测 · ')
+            if event.get('resume_number'):prefix='续测 · '+prefix
             self.status.set(prefix+f"第{event['index']+1}/{event['total']}档 · 指令{event['level']:.3f}（{event['level']*100:g}%）")
         elif kind=='phase':self.phase.set(event['text'])
+        elif kind=='schedule':
+            self.total_steps=event['total'];self.phase.set(event['text'])
+            self.plan_note.configure(text=event['text']+'\n补点计划已保存，停机等待后自动执行。')
         elif kind=='log':
             if event['text'].startswith('STEP_START:'):self.motion_started=time.monotonic()
         elif kind=='live':self.show_live(event.get('state'),event.get('preview'))
@@ -630,6 +663,7 @@ class Application:
         sources.extend(self.points)
         for index,point in enumerate(sources):
             m=point['metrics'];source={'historical_campaign':'历史汇总','historical_replay':'历史回放','measurement':'实机采集'}.get(point.get('source_kind'),'记录')
+            if point.get('phase')=='supplement':source+=' · 自动补点'
             values=(f"{point['level']:.3f}",text_number(m['thrust_g'].get('mean')),text_number(m['current_a'].get('mean'),3),text_number(m['power_w'].get('mean')),text_number(point.get('efficiency_g_per_w')),source)
             key=str(index);self.history_tree.insert('','end',iid=key,values=values);self.rows[key]=point
 

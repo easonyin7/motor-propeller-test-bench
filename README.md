@@ -5,6 +5,7 @@
 ## 功能
 
 - 不转电机的设备预检、现场确认及多档自动测试。
+- 一次执行10%、20%、…、100%共10档，再按本轮数据自动补测300～500g内部8点；正常完成共18点。
 - 自定义输出指令、缓升、目标保持与档间停机。
 - LCD / LED 数码管识别、短暂漏读处理及数据时效检查。
 - 实时监控、拉力–功率及输出指令相关曲线、CSV和报告导出。
@@ -34,6 +35,7 @@ py -3.12 -m venv cv_mvp/.venv
 - [部署与验收清单](distribution/部署与验收清单.md)：接收方逐项验收。
 - [开发交接说明](distribution/开发交接说明.md)：模块、迁移及构建入口。
 - [交付验证记录](distribution/交付验证记录.md)：2026-10-20离线交付检查及未验证事项。
+- [自动18点流程验证](bench_app/验证记录_2026-10-25.md)：10%～100%主测、自动补点、停止与续测的离线验证。
 - [近期实测汇总](examples/results/README.md)：10月19日主测与补点的结果表。
 
 ## 目录
@@ -52,7 +54,7 @@ py -3.12 -m venv cv_mvp/.venv
 ## 离线测试
 
 ```powershell
-.\cv_mvp\.venv\Scripts\python.exe -m unittest bench_app.test_app distribution.test_distribution
+.\cv_mvp\.venv\Scripts\python.exe -m unittest bench_app.test_app bench_app.test_automatic distribution.test_distribution
 .\cv_mvp\.venv\Scripts\python.exe -m unittest discover -s px4_mvp -p test_*.py
 .\cv_mvp\.venv\Scripts\python.exe -m unittest discover -s cv_mvp -p test_instrument_reader.py
 .\cv_mvp\.venv\Scripts\python.exe -m bench_app --smoke-test

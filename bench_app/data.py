@@ -195,7 +195,7 @@ def load_campaign(path=CAMPAIGN):
 def export_session(session,folder):
     folder=Path(folder);folder.mkdir(parents=True,exist_ok=True)
     write_json(folder/'session.json',session)
-    fields=['level','source_kind','thrust_mean_g','thrust_min_g','thrust_max_g','voltage_mean_v',
+    fields=['level','source_kind','phase','stage_number','thrust_mean_g','thrust_min_g','thrust_max_g','voltage_mean_v',
             'current_mean_a','current_peak_a','power_mean_w','power_peak_w','efficiency_g_per_w',
             'samples','thrust_valid_samples','hold_seconds','settle_seconds','policy','run_dir']
     with io.StringIO(newline='') as stream:
@@ -203,6 +203,7 @@ def export_session(session,folder):
         for point in session.get('points',[]):
             m=point['metrics'];t=m['thrust_g'];i=m['current_a'];p=m['power_w']
             writer.writerow(dict(level=point['level'],source_kind=point['source_kind'],
+                phase=point.get('phase',''),stage_number=point.get('stage_number',''),
                 thrust_mean_g=t['mean'],thrust_min_g=t.get('min'),thrust_max_g=t.get('max'),
                 voltage_mean_v=m['voltage_v']['mean'],current_mean_a=i['mean'],current_peak_a=i.get('max'),
                 power_mean_w=p['mean'],power_peak_w=p.get('max'),
@@ -214,12 +215,19 @@ def export_session(session,folder):
     lines=['# 电机桨叶测试记录','',f"状态：{session['status']}",f"模式：{session['mode']}",
         f"创建：{session.get('created_at','')}",f"电机／桨叶：{session.get('specimen','未填写')}",'',
         '新采集点统一忽略目标档前指定秒数；功率使用同帧电压×电流，仪表功率保留在原始记录。缺测不补值，未自动扣零。历史回放不代表新实测。','',
-        '| 指令 | 拉力均值 g | 电流均值 A | 功率均值 W | 效率 g/W | 拉力有效/窗口样本 |','|---|---:|---:|---:|---:|---|']
+        '| 阶段 | 指令 | 拉力均值 g | 电流均值 A | 功率均值 W | 效率 g/W | 拉力有效/窗口样本 |','|---|---|---:|---:|---:|---:|---|']
     for point in session.get('points',[]):
         m=point['metrics']
-        lines.append(f"| {point['level']:.3f} | {fmt(m['thrust_g']['mean'])} | {fmt(m['current_a']['mean'])} | {fmt(m['power_w']['mean'])} | {fmt(point['efficiency_g_per_w'])} | {m['thrust_g'].get('n','—')}/{point.get('samples','—')} |")
+        phase={'main':'主测','supplement':'自动补点'}.get(point.get('phase'),'—')
+        lines.append(f"| {phase} | {point['level']:.3f} | {fmt(m['thrust_g']['mean'])} | {fmt(m['current_a']['mean'])} | {fmt(m['power_w']['mean'])} | {fmt(point['efficiency_g_per_w'])} | {m['thrust_g'].get('n','—')}/{point.get('samples','—')} |")
         for warning in (point.get('quality') or {}).get('warnings',[]):
             lines.append(f"- {point['level']:.3f} 统计提示：{warning}")
+    supplement=session.get('supplement')
+    if supplement:
+        levels='、'.join(f'{v:.3f}' for v in supplement.get('levels',[])) or '尚未生成'
+        lines+=['','## 自动补点计划','',f"状态：{supplement['status']}；目标300–500g区间内部8点。",
+                f'实际输出指令：{levels}。','仅按本轮主测结果插值；不是拉力闭环，不保证实测值恰好等于目标。']
+        if supplement.get('error'):lines.append('未生成原因：'+supplement['error'])
     retries=session.get('retry_log') or []
     if retries:
         lines+=['','## 自动重测记录','',

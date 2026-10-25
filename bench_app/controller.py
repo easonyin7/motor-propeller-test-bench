@@ -12,8 +12,8 @@ import threading
 import time
 import uuid
 
-from .data import analyze_run,export_session,load_campaign,raw_samples,read_json,target_window,write_json
-from .model import CAMERA_CONFIG,DATA,ROOT,Plan,Step,build_command,python_executable,validate_profile
+from .data import analyze_run,export_session,load_campaign,raw_samples,read_json,supplement_levels,target_window,write_json
+from .model import CAMERA_CONFIG,DATA,ROOT,MAIN_LEVELS,Plan,Step,build_command,python_executable,validate_profile
 
 HIDDEN = getattr(subprocess,'CREATE_NO_WINDOW',0)
 STAGE_ATTEMPTS = 2  # One automatic retry, only when the reading window had too few samples.
@@ -98,6 +98,10 @@ class Controller:
             raise ValueError('请先确认上一轮现场已经完全停转。')
         if not isinstance(plan,Plan) or mode not in ('demo','real'):
             raise ValueError('测试方案或模式无效。')
+        if plan.auto_supplement and mode!='real':
+            raise ValueError('自动主测与补点仅用于实机；历史回放请选择低输出验证等已有档位。')
+        if plan.auto_supplement and plan.levels!=MAIN_LEVELS:
+            raise ValueError('自动补点方案的主测必须为10%、20%、…、100%；自定义方案请取消自动补点。')
         if mode=='real' and not prepare_only:
             if not operator or operator.get('confirmed') is not True or operator.get('plan_signature')!=plan.signature:
                 raise ValueError('本轮方案必须经过现场确认。')
@@ -112,6 +116,10 @@ class Controller:
             specimen='2006-2150KV / D90S-3（历史记录）' if mode=='demo' else specimen,
             plan=plan.as_dict(),points=[],run_dirs=[],operator=operator,
             physical_confirmation=None,port=port if mode=='real' else None)
+        self.session['execution_steps']=[dict(**Step(v).as_dict(),phase='main') for v in plan.levels]
+        if plan.auto_supplement and not prepare_only:
+            self.session['supplement']=dict(status='pending',low_g=300,high_g=500,count=8,
+                max_level=max(plan.levels),levels=[],source='this_session_main_points')
         if mode=='real' and not prepare_only:
             self.session['residual_thrust_policy']=dict(
                 unlimited=True,max_absolute_g=None,first_stage_strict=not plan.followup_first,
@@ -153,13 +161,18 @@ class Controller:
         lock=WorkspaceLock();locked=False
         try:
             if mode=='real':lock.acquire();locked=True
-            steps=plan.levels[:1] if prepare_only else plan.levels
+            steps=list(plan.levels[:1] if prepare_only else plan.levels)
             resume_suffix=f'_resume{resume_number}' if resume_number else ''
             for local_index,level in enumerate(steps):
                 index=stage_offset+local_index
                 if self.cancelled.is_set():break
-                self.emit('step',index=local_index,total=len(steps),level=level,
-                          stage_number=index+1,resume_number=resume_number)
+                supplement=self.session.get('supplement') or {}
+                reserved=8 if supplement.get('status')=='pending' and not prepare_only else 0
+                stage=self._session_steps(self.session)[index]
+                self.emit('step',index=local_index,total=len(steps)+reserved,level=level,
+                          stage_number=index+1,resume_number=resume_number,phase=stage.get('phase','main'))
+                if stage.get('phase')=='supplement':
+                    self.session['supplement']['status']='running'
                 if mode=='demo':
                     point=self._demo_step(level,plan.settle_seconds)
                 else:
@@ -202,7 +215,8 @@ class Controller:
                         # The motor is already stopped and output is zero. Retry
                         # only this throttle level, then continue with the plan.
                         self.session.setdefault('retry_log',[]).append(dict(
-                            level=level,attempt=attempt,folder=str(folder),
+                            level=level,attempt=attempt,folder=str(folder),stage_number=index+1,
+                            phase=stage.get('phase','main'),
                             issues=point['quality']['issues'],
                             warnings=point['quality'].get('warnings',[]),
                             samples=point.get('samples'),
@@ -215,6 +229,7 @@ class Controller:
                     if prepare_only and self.session['status']=='preparation_passed_no_motor_commands':
                         break
                 if self.cancelled.is_set() or point is None:break
+                point.update(stage_number=index+1,phase=stage.get('phase','main'))
                 self.session['points'].append(point)
                 self.emit('point',point=point)
                 export_session(self.session,self.folder)
@@ -222,6 +237,16 @@ class Controller:
                     message='该档已停机，但单独重测后统计样本仍不足，后续档位已暂停：'+'；'.join(point['quality']['issues'])
                     self._record_failed_stage(index,level,folder,STAGE_ATTEMPTS,message,True)
                     raise StageFailure(message)
+                if (not prepare_only and (self.session.get('supplement') or {}).get('status')=='pending'
+                        and index==len(self.session['plan']['steps'])-1):
+                    # Generation is pure planning after the last main stage has
+                    # stopped. Persist it even if Stop arrives here, so a later
+                    # explicit resume can execute the exact saved supplement.
+                    levels=self._generate_supplement()
+                    steps.extend(levels)
+                    self.emit('schedule',levels=list(levels),total=len(steps),
+                              text='主测完成，已生成300–500g自动补点：'+
+                                   '、'.join(f'{v:.3f}' for v in levels))
                 # Compare against the original plan length. A resumed run enumerates
                 # only the remaining levels, so len(steps)-1 would skip the cooldown
                 # between the final two resumed stages.
@@ -230,11 +255,17 @@ class Controller:
                     self.emit('live',state=None)
                     self.cancelled.wait(.2 if mode=='demo' else plan.cooldown_seconds)
             if self.cancelled.is_set():
+                if (self.session.get('supplement') or {}).get('levels'):
+                    self.session['supplement']['status']='paused'
                 self.session['status']='cancelled' if mode=='demo' else 'cancelled_waiting_operator'
             elif not prepare_only:
+                if self.session.get('supplement'):
+                    self.session['supplement']['status']='completed'
                 self.session['failed_stage']=None
                 self.session['status']='demo_complete' if mode=='demo' else 'software_complete_waiting_operator'
         except Exception as exc:
+            if (self.session.get('supplement') or {}).get('levels'):
+                self.session['supplement']['status']='paused'
             self.session.update(status='aborted' if mode=='demo' or prepare_only else 'aborted_waiting_operator',error=str(exc))
             self.emit('error',text=str(exc))
         finally:
@@ -247,6 +278,30 @@ class Controller:
                 if locked:lock.release()
                 self.active=False
                 self.emit('finished',session=deepcopy(self.session),folder=str(self.folder))
+
+    @staticmethod
+    def _session_steps(session):
+        return (session or {}).get('execution_steps') or ((session or {}).get('plan') or {}).get('steps') or []
+
+    def _generate_supplement(self):
+        policy=self.session['supplement']
+        count=len(self.session['plan']['steps'])
+        primary=[point for point in self.session['points'] if point.get('phase')=='main']
+        if (len(primary)!=count or any(not (p.get('quality') or {}).get('passed',False) for p in primary)
+                or {p.get('stage_number') for p in primary}!=set(range(1,count+1))):
+            raise StageFailure('主测未全部有效完成，未启动自动补点。')
+        try:
+            levels=supplement_levels(primary,policy['low_g'],policy['high_g'],policy['count'])
+            if max(levels)>policy['max_level']:
+                raise ValueError('补点指令超出已确认的主测范围。')
+        except ValueError as exc:
+            policy.update(status='planning_failed',error=str(exc))
+            raise StageFailure('主测已停机并保存，但自动补点无法生成：'+str(exc)) from exc
+        policy.update(status='generated',levels=list(levels),generated_at=datetime.now().astimezone().isoformat())
+        self.session['execution_steps'].extend(dict(**Step(v).as_dict(),phase='supplement') for v in levels)
+        write_json(self.folder/'supplement_plan.json',policy)
+        export_session(self.session,self.folder)
+        return levels
 
     def _record_failed_stage(self,index,level,folder,attempt,error,point_recorded):
         entry=dict(index=int(index),stage_number=int(index)+1,level=float(level),
@@ -268,7 +323,8 @@ class Controller:
         points=self._level_points(session)
         for index,step in enumerate(steps):
             level=float(step['level'])
-            matches=points.get(level) or []
+            matches=([p for p in session.get('points',[]) if p.get('stage_number')==index+1]
+                     if session.get('execution_steps') else points.get(level) or [])
             if not any((point.get('quality') or {}).get('passed',True) for point in matches):
                 return index
         return None
@@ -276,7 +332,7 @@ class Controller:
     def resume_remaining_levels(self,session=None):
         """Return (original index, remaining levels) from the first unfinished stage."""
         session=self.session if session is None else session
-        steps=((session or {}).get('plan') or {}).get('steps') or []
+        steps=self._session_steps(session)
         if not steps:return None
         index=self._resume_start_index(session,steps)
         if index is None:return None
@@ -332,14 +388,15 @@ class Controller:
             raise ValueError('现场停转确认缺失，不能续测。')
         if not isinstance(plan,Plan):raise ValueError('续测方案无效。')
         original=self.session.get('plan') or {}
-        steps=original.get('steps') or []
+        steps=self._session_steps(self.session)
         remaining_info=self.resume_remaining_levels(self.session)
         if not remaining_info:raise ValueError('原方案没有未完成的档位，不能续测。')
         start_index,remaining=remaining_info
         if plan.levels!=remaining:
             raise ValueError('续测方案必须从失败档开始并包含原方案剩余的全部档位。')
         if (plan.cooldown_seconds!=original.get('cooldown_seconds')
-                or plan.settle_seconds!=original.get('settle_seconds')):
+                or plan.settle_seconds!=original.get('settle_seconds')
+                or plan.auto_supplement!=original.get('auto_supplement',False)):
             raise ValueError('续测方案的档间停机与统计设置必须与原方案一致。')
         if (not operator or operator.get('confirmed') is not True
                 or operator.get('plan_signature')!=plan.signature):
@@ -353,7 +410,9 @@ class Controller:
         failed_level=float(steps[start_index]['level'])
         superseded=[]
         for point in list(self.session.get('points') or []):
-            try:same=abs(float(point.get('level'))-failed_level)<1e-9
+            try:
+                same=(point.get('stage_number')==start_index+1 if self.session.get('execution_steps')
+                      else abs(float(point.get('level'))-failed_level)<1e-9)
             except (TypeError,ValueError):same=False
             if same and not (point.get('quality') or {}).get('passed',True):
                 superseded.append(deepcopy(point))

@@ -379,7 +379,8 @@ class AppTests(unittest.TestCase):
         cases=[('0.025',()),('0.03',('--gentle-rise','--expanded-trial')),
                ('0.10',('--gentle-rise','--high-range')),
                ('0.60',('--gentle-rise','--high-range')),
-               ('0.90',('--gentle-rise','--extreme-range'))]
+               ('0.90',('--gentle-rise','--extreme-range')),
+               ('1.00',('--gentle-rise','--extreme-range'))]
         for value,flags in cases:
             result=subprocess.run(base+['--step-value',value,*flags],
                                   capture_output=True,text=True,encoding='utf-8')
